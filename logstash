@@ -1,0 +1,59 @@
+input{
+#    tcp{
+#            type => "haproxy"
+#            port => 5044
+#            host => 192.168.208.22
+#           # codec => "json"
+#    }
+
+
+input{
+
+  #tcp{
+  beats{
+    type => "haproxy"
+   # host => "192.168.208.22"
+    port => "5045"
+    #5000 / 5044 / 514
+  }
+}
+
+
+filter{
+  grok{
+    match => { "message" => "%{IP:client} %{WORD:method} %{URIPATHPARAM:request} %{NUMBER:bytes} %{NUMBER:duration}" }
+    add_field => {"source" => "logstash"}
+   # match => {"message" => "%{SYSLOGBASE} %{HOST:host} %{DATA:message} %{WORD:program}%{NOTSPACE} %{NOTSPACE}%{NUMBER:duration}%{>
+  }
+}
+
+
+output{
+}
+ stdout{}
+ # file {
+ #   path => "/etc/logstash/haproxy-logs/*.log"
+#    codec => line { format => "custom format: %{message}"}
+ # }
+}
+
+
+
+#output {
+#  if  [type] == "haproxy" {
+#    statsd {
+     # host => "statsd-host"
+#        count => [
+#          "haproxy.%{frontend_name}.%{backend_name}.%{server_name}.response_size", "%{bytes_read}"
+#        ]
+#        increment => [
+#          "haproxy.%{frontend_name}.%{backend_name}.%{server_name}.hits",
+#          "haproxy.%{important}"
+#        ]
+#        timing => [
+#          "haproxy.%{frontend_name}.%{backend_name}.%{server_name}.response_time", "%{time_duration}",
+#        ]
+#     }
+#  }
+
+#}
